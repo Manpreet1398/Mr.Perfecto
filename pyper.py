@@ -1,3 +1,3 @@
 import pyperclip
-#pyperclip.copy("hello")
+pyperclip.copy("hello")
 print(pyperclip.paste())
