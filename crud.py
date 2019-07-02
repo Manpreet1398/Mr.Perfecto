@@ -3,11 +3,11 @@ from flask_mysqldb import MySQL
 
 
 app = Flask(__name__)
-app.config['MYSQL_HOST'] = "localhost"
-app.config['MYSQL_USER'] = "root"
-app.config["MYSQL_PASSWORD"] = "manpreet123!@#$%^"
-app.config["MYSQL_DB"] = "table123"
-mysql = MySQL(app)
+app.config['MYSQL_HOST']="localhost"
+app.config['MYSQL_USER']="root"
+app.config["MYSQL_PASSWORD"]="manpreet123!@#$%^"
+app.config["MYSQL_DB"]="user"
+mysql=MySQL(app)
 
 import json
 
@@ -20,38 +20,34 @@ cur=None
 @app.route("/user", methods=["POST"])
 def add_user():
     global cur
-    name = request.json['name']
+    username = request.json['username']
     email = request.json['email']
-    cur = mysql.connection.cursor()
-    query = "insert into employee values (null,%s,%s)"
-    data = [name, email]
+    cur=mysql.connection.cursor()
+    query="insert into user_de values (null,%s,%s)"
+    data = [username, email]
     cur.execute(query,data)
     cur.connection.commit()
-    query = "select * from employee order by id desc limit 1"
+    query="select * from user_de order by id desc limit 1"
     cur.execute(query)
     cur.connection.commit()
-    d = {}
+    d={}
     for val in cur.fetchall():
-        d["id"] = val[0]
-        d["name"] = val[1]
-        d["address"] = val[2]
-        d["email"] = val[3]
-        d["joining_date"] = val[4]
+        d["id"]=val[0]
+        d["username"]=val[1]
+        d["email"]=val[2]
     return json.dumps(d)
 
 # endpoint to show all users
 @app.route("/user", methods=["GET"])
 def get_user():
     cur = mysql.connection.cursor()
-    cur.execute("select * from employee")
+    cur.execute("select * from user_de")
     l=[]
     d={}
     for val in cur.fetchall():
-        d["id"] = val[0]
-        d["name"] = val[1]
-        d["address"] = val[2]
-        d["email"] = val[3]
-        d["joining_date"] = val[4]
+        d["id"]=val[0]
+        d["username"]=val[1]
+        d["email"]=val[2]
         l.append(d)
     print(l)
     return json.dumps(l)
@@ -60,15 +56,13 @@ def get_user():
 @app.route("/user/<id>", methods=["GET"])
 def user_detail(id):
     cur = mysql.connection.cursor()
-    cur.execute("select * from employee where id=\""+id+"\"")
+    cur.execute("select * from user_de where id=\""+id+"\"")
 
     d = {}
     for val in cur.fetchall():
         d["id"] = val[0]
-        d["name"] = val[1]
-        d["address"] = val[2]
-        d["email"] = val[3]
-        d["joining_date"]=val[4]
+        d["username"] = val[1]
+        d["email"] = val[2]
     return json.dumps(d)
 
 # endpoint to update user
@@ -78,20 +72,18 @@ def user_update(id):
     global cur
 
     cur = mysql.connection.cursor()
-#    cur.execute("select * from employee where id=\"" + id + "\"")
-    name = request.json['name']
+#    cur.execute("select * from user_detail where id=\"" + id + "\"")
+    username = request.json['username']
     email = request.json['email']
-    cur.execute("update employee set name=\""+name+"\" , email=\""+email+"\" where id=\"" + id + "\"")
+    cur.execute("update user_de set username=\""+username+"\" , email=\""+email+"\" where id=\"" + id + "\"")
     cur.connection.commit()
-    query="select * from employee where id=\"" + id + "\""
+    query="select * from user_de where id=\"" + id + "\""
     cur.execute(query)
     d={}
     for val in cur.fetchall():
         d["id"]=val[0]
-        d["name"]=val[1]
-        d["address"] = val[2]
-        d["email"]=val[3]
-        d["joining_date"] = val[4]
+        d["username"]=val[1]
+        d["email"]=val[2]
     return json.dumps(d)
 
 
@@ -100,7 +92,7 @@ def user_update(id):
 @app.route("/user/<id>", methods=["DELETE"])
 def user_delete(id):
     cur = mysql.connection.cursor()
-    cur.execute("delete from employee where id=\""+id+"\"")
+    cur.execute("delete from user_de where id=\""+id+"\"")
     cur.connection.commit()
     me = Object()
     return jsonify(me.toJSON())
