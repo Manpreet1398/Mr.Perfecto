@@ -32,6 +32,7 @@ def sum(self) :
     print(c)
     
 c=const(4,5)
+#calls without an object
 c.sum()
 
 #Q class with const and 2 values as a parameters 4 methods (arithmetic operators)     
